@@ -1,7 +1,7 @@
 package models
 
 type Operations struct {
-	Name   string
+	Name   *string
 	Width  *uint
 	Height *uint
 	X      *uint
