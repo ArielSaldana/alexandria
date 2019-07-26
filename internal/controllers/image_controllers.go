@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/ArielSaldana/alexandria/internal/models"
 	"github.com/ArielSaldana/alexandria/pkg/imageutils"
 	"github.com/julienschmidt/httprouter"
@@ -93,8 +92,6 @@ func queryParamsToOperations(r *http.Request, operation *models.Operations, keys
 		}
 
 		dynamicVariable := reflect.ValueOf(operation).Elem().FieldByName(capitalizedKey)
-
-		fmt.Println(capitalizedKey, dynamicVariable.IsValid(), dynamicVariable.CanSet())
 
 		if !dynamicVariable.IsValid() || !dynamicVariable.CanSet() {
 			continue
