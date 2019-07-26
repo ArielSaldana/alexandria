@@ -96,22 +96,28 @@ func queryParamsToOperations(r *http.Request, operation *models.Operations, keys
 		var value interface{}
 
 		dynamicVariable := reflect.ValueOf(operation).Elem().FieldByName(capitalizedKey)
+
+		if !dynamicVariable.IsValid() || !dynamicVariable.CanSet() {
+			continue
+		}
+
 		elementType := reflect.PtrTo(dynamicVariable.Type())
 		valueOfType := elementType.Elem().Elem().Kind().String()
 
-		if valueOfType == "string" {
-			value = queryValue
-		} else if valueOfType == "uint" {
+		switch valueOfType {
+		case "uint":
 			numericValue64, err := strconv.ParseUint(queryValue, 10, 32)
 			if err != nil {
 				panic(err)
 			}
 			value = uint(numericValue64)
-		} else {
-			continue
-		}
+			break
 
-		if !dynamicVariable.IsValid() || !dynamicVariable.CanSet() {
+		case "string":
+			value = queryValue
+			break
+
+		default:
 			continue
 		}
 
