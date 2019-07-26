@@ -98,7 +98,6 @@ func queryParamsToOperations(r *http.Request, operation *models.Operations, keys
 		}
 
 		dynamicVariable.Set(ptr(reflect.ValueOf(numericValue)))
-		//dynamicVariable.SetUint(&numericValue)
 	}
 
 	return models.Operations{}
