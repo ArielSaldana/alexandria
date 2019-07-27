@@ -1,7 +1,12 @@
+/*
+ * TODO: move the reflection code over to a utility
+ */
+
 package controllers
 
 import (
 	"github.com/ArielSaldana/alexandria/internal/models"
+	"github.com/ArielSaldana/alexandria/pkg/decoder"
 	"github.com/ArielSaldana/alexandria/pkg/imageutils"
 	"github.com/julienschmidt/httprouter"
 	"gopkg.in/gographics/imagick.v3/imagick"
@@ -18,44 +23,11 @@ func ImageController(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 func ImageCropController(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	mw := getMagickWandUsingQueryParam(r)
+	var op models.Operations
+	var decoder decoder.QueryDecoder
+	decoder.Decode(&op, r.URL.Query())
 
-	var keys []string
-	keys = make([]string, 5)
-
-	keys[0] = "width"
-	keys[1] = "height"
-	keys[2] = "x"
-	keys[3] = "y"
-	keys[4] = "name"
-
-	operation := new(models.Operations)
-	operationName := "crop"
-	operation.Name = &operationName
-
-	queryParamsToOperations(r, operation, keys)
-
-	// logic
-	if operation.Width == nil {
-		operationWidth := mw.GetImageWidth()
-		operation.Width = &operationWidth
-	}
-
-	if operation.Height == nil {
-		operationHeight := mw.GetImageHeight()
-		operation.Height = &operationHeight
-	}
-
-	if operation.X == nil {
-		operationX := uint(0)
-		operation.X = &operationX
-	}
-
-	if operation.Y == nil {
-		operationY := uint(0)
-		operation.Y = &operationY
-	}
-
-	mw.CropImage(*operation.Width, *operation.Height, int(*operation.X), int(*operation.Y))
+	mw.CropImage(op.Width, op.Height, int(op.X), int(op.Y))
 	w.Write(mw.GetImageBlob())
 }
 
