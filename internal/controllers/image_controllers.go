@@ -6,7 +6,6 @@ package controllers
 
 import (
 	"github.com/ArielSaldana/alexandria/internal/models"
-	"github.com/ArielSaldana/alexandria/pkg/decoder"
 	"github.com/ArielSaldana/alexandria/pkg/imageutils"
 	"github.com/julienschmidt/httprouter"
 	"gopkg.in/gographics/imagick.v3/imagick"
@@ -18,16 +17,6 @@ import (
 
 func ImageController(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	mw := getMagickWandUsingQueryParam(r)
-	w.Write(mw.GetImageBlob())
-}
-
-func ImageCropController(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	mw := getMagickWandUsingQueryParam(r)
-	var op models.Operations
-	var decoder decoder.QueryDecoder
-	decoder.Decode(&op, r.URL.Query())
-
-	mw.CropImage(op.Width, op.Height, int(op.X), int(op.Y))
 	w.Write(mw.GetImageBlob())
 }
 
