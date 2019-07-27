@@ -54,3 +54,21 @@ func GetAdjustedHeight(width uint, height uint, adjustedWidth uint) uint {
 	adjustedHeight := math.Ceil(float64(adjustedWidth / (width / height)))
 	return uint(adjustedHeight)
 }
+
+func Biggest(x uint, y uint) uint {
+	if x > y {
+		return x
+	}
+	return y
+}
+
+func Smallest(x uint, y uint) uint {
+	if x > y {
+		return y
+	}
+	return x
+}
+
+func GetPos(originalWidth, newWidth uint) uint {
+	return (originalWidth - newWidth) / 2
+}
