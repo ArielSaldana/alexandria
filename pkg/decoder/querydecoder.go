@@ -13,9 +13,7 @@ type QueryDecoder struct {
 
 func (q QueryDecoder) Decode(ref interface{}, values url.Values) {
 	elem := reflect.ValueOf(ref).Elem()
-	//elemType := elem.Type()
 	elemNumFields := elem.Type().NumField()
-	//fmt.Println(elem , elemType, elemNumFields)
 
 	for i := 0; i < elemNumFields; i++ {
 		nameOfField := reflect.ValueOf(ref).Elem().Type().Field(i).Name
