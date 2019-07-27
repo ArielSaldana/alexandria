@@ -1,3 +1,8 @@
+/*
+ * TODO decide on either cropping the image or clamping the position /
+ * to pos <= fullWdith - width
+ */
+
 package controllers
 
 import (
@@ -42,20 +47,21 @@ func handleCrop(wand *imagick.MagickWand, settings models.Operations) {
 }
 
 func handleCropSquare(wand *imagick.MagickWand, imageConfig models.Operations) {
-	var width uint
+	if imageConfig.Width == 0 || imageConfig.Width > wand.GetImageWidth() {
+		imageConfig.Width = wand.GetImageWidth()
+	}
 
-	width = imageutils.Smallest(wand.GetImageWidth(), wand.GetImageHeight())
-	if imageConfig.Width != 0 && imageConfig.Width < width {
-		width = imageConfig.Width
+	if imageConfig.Height == 0 || imageConfig.Height > wand.GetImageHeight() {
+		imageConfig.Height = wand.GetImageHeight()
 	}
-	if imageConfig.Height != 0 && imageConfig.Height < width {
-		width = imageConfig.Height
-	}
+
+	imageConfig.Width = imageutils.Smallest(imageConfig.Width, imageConfig.Height)
+	imageConfig.Height = imageConfig.Width
 
 	// width start position
-	posX := imageutils.GetPos(wand.GetImageWidth(), width)
+	posX := imageutils.GetPos(wand.GetImageWidth(), imageConfig.Width)
 	// height start position
-	posY := imageutils.GetPos(wand.GetImageHeight(), width)
+	posY := imageutils.GetPos(wand.GetImageHeight(), imageConfig.Width)
 
-	wand.CropImage(width, width, int(posX), int(posY))
+	wand.CropImage(imageConfig.Width, imageConfig.Width, int(posX), int(posY))
 }
