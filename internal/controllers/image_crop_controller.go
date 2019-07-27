@@ -59,9 +59,18 @@ func handleCropSquare(wand *imagick.MagickWand, imageConfig models.Operations) {
 	imageConfig.Height = imageConfig.Width
 
 	// width start position
-	posX := imageutils.GetPos(wand.GetImageWidth(), imageConfig.Width)
+	imageConfig.X = imageutils.GetPos(wand.GetImageWidth(), imageConfig.Width)
 	// height start position
-	posY := imageutils.GetPos(wand.GetImageHeight(), imageConfig.Width)
+	imageConfig.Y = imageutils.GetPos(wand.GetImageHeight(), imageConfig.Width)
 
-	wand.CropImage(imageConfig.Width, imageConfig.Width, int(posX), int(posY))
+	err := wand.CropImage(
+		imageConfig.Width,
+		imageConfig.Height,
+		int(imageConfig.X),
+		int(imageConfig.Y),
+	)
+
+	if err != nil {
+		// TODO: handle err
+	}
 }
