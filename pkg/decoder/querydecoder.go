@@ -52,7 +52,6 @@ func assignDynamicVariable(ref interface{}, key string, value interface{}) {
 
 			newUintVal := uint(newVal)
 			dynamicVariable.Set(reflect.ValueOf(newUintVal))
-			break
 		}
 
 		return
